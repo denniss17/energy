@@ -4,6 +4,8 @@ import (
 	"energy/core"
 	"energy/model"
 	"github.com/gin-gonic/gin"
+	log "github.com/sirupsen/logrus"
+	"net/http"
 )
 
 type MeterReadingController struct {
@@ -30,4 +32,22 @@ func (c MeterReadingController) Index(context *gin.Context) {
 	//		Water:      345,
 	//	},
 	//})
+}
+
+func (c MeterReadingController) Create(context *gin.Context) {
+	var meterReading *model.MeterReading
+
+	if err := context.ShouldBindJSON(&meterReading); err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	err := c.App.Db.Insert(meterReading)
+	if err != nil {
+		log.WithError(err).Error("Unable to save MeterReading")
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	context.JSON(http.StatusCreated, nil)
 }

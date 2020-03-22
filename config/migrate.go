@@ -16,9 +16,7 @@ func MigrateDb(db *pg.DB) error {
 		db.Options().Addr,
 		db.Options().Database)
 
-	migrator, err := migrate.New(
-		"file://migrations",
-		databaseUrl)
+	migrator, err := migrate.New("file://migrations", databaseUrl)
 	if err != nil {
 		return err
 	}
