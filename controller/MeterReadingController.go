@@ -1,18 +1,18 @@
 package controller
 
 import (
+	"energy/core"
 	"energy/model"
 	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg"
 )
 
 type MeterReadingController struct {
-	Db *pg.DB
+	App *core.Application
 }
 
 func (c MeterReadingController) Index(context *gin.Context) {
 	var meterReadings []model.MeterReading
-	err := c.Db.Model(&meterReadings).Select()
+	err := c.App.Db.Model(&meterReadings).Select()
 
 	if err != nil {
 		context.Error(err)

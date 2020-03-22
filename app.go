@@ -1,59 +1,37 @@
 package main
 
 import (
-	"energy/controller"
-	"github.com/gin-gonic/gin"
-	"github.com/go-pg/pg"
+	"energy/config"
+	"energy/core"
+	"log"
 )
 
 func main() {
-	app := Application{}
-	defer app.close()
+	var err error
 
-	// Init application
-	app.init()
+	app := &core.Application{}
+	defer app.Close()
 
-	// Create database
-	err := app.createDatabase()
-
+	log.Print("Initializing database")
+	app.Db, err = config.InitDb()
 	if err != nil {
 		panic(err)
 	}
 
-	// Routes
-	meterReadingController := controller.MeterReadingController{Db: app.db}
-	app.router.GET("/meter-readings", meterReadingController.Index)
+	log.Print("Migrating database")
+	err = config.MigrateDb(app.Db)
+	if err != nil {
+		panic(err)
+	}
 
-	// listen and serve on 0.0.0.0:8080
-	app.run()
-}
+	log.Print("Initializing router")
+	app.Router, err = config.InitRouter(app)
+	if err != nil {
+		panic(err)
+	}
 
-type Application struct {
-	router *gin.Engine
-	db     *pg.DB
-}
-
-func (app *Application) init() {
-	app.db = pg.Connect(&pg.Options{
-		User:     "energy",
-		Database: "energy",
-		Password: "energy",
-	})
-
-	// Create server with default middleware
-	app.router = gin.Default()
-}
-
-func (app *Application) createDatabase() error {
-	return nil
-	//return app.db.CreateTable((*model.MeterReading)(nil), &orm.CreateTableOptions{})
-}
-
-func (app *Application) run() {
-	app.router.Run()
-}
-
-func (app *Application) close() {
-	app.db.Close()
-
+	err = app.Run()
+	if err != nil {
+		panic(err)
+	}
 }
