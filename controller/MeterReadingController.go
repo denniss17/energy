@@ -18,16 +18,9 @@ func (c MeterReadingController) Index(context *gin.Context) {
 		context.Error(err)
 	}
 
-	context.JSON(200, meterReadings)
+	if meterReadings == nil {
+		meterReadings = make([]model.MeterReading, 0)
+	}
 
-	//context.JSON(200, []model.MeterReading{
-	//	model.MeterReading{
-	//		Id:         1,
-	//		Timestamp:  time.Now(),
-	//		EnergyHigh: 1234,
-	//		EnergyLow:  123,
-	//		Gas:        234,
-	//		Water:      345,
-	//	},
-	//})
+	context.JSON(200, gin.H{"data": meterReadings})
 }

@@ -14,7 +14,7 @@ func InitRouter(app *core.Application) (*gin.Engine, error) {
 	meterReadingController := controller.MeterReadingController{App: app}
 
 	// Create routes
-	router.GET("/meter-readings", meterReadingController.Index)
+	router.GET("/api/meter-readings", meterReadingController.Index)
 
 	return router, nil
 }

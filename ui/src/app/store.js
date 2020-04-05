@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from '../features/counter/counterSlice';
+import meterReadingsReducer from "../features/meterReadings/meterReadingsSlice";
 
 export default configureStore({
   reducer: {
-    counter: counterReducer,
+    meterReadings: meterReadingsReducer
   },
 });
