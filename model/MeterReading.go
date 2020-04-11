@@ -16,6 +16,7 @@ type MeterReading struct {
 	Water      float64   `pg:",notnull" json:"water" binding:"required" validate:"required"`
 }
 
+// Compiletime typechecking
 var _ pg.BeforeInsertHook = (*MeterReading)(nil)
 
 func (meterReading *MeterReading) BeforeInsert(context context.Context) (context.Context, error) {

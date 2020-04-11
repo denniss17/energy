@@ -4,6 +4,7 @@ import (
 	"energy/core"
 	"energy/model"
 	"github.com/gin-gonic/gin"
+	uuid "github.com/satori/go.uuid"
 	log "github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -21,31 +22,39 @@ func (c MeterReadingController) Index(context *gin.Context) {
 	}
 
 	context.JSON(200, meterReadings)
+}
 
-	//context.JSON(200, []model.MeterReading{
-	//	model.MeterReading{
-	//		Id:         1,
-	//		Timestamp:  time.Now(),
-	//		EnergyHigh: 1234,
-	//		EnergyLow:  123,
-	//		Gas:        234,
-	//		Water:      345,
-	//	},
-	//})
+func (c MeterReadingController) Get(context *gin.Context) {
+	id, err := uuid.FromString(context.Param("id"))
+
+	if err != nil {
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid UUID", "details": err})
+		return
+	}
+
+	meterReading := &model.MeterReading{Id: id}
+	err = c.App.Db.Select(meterReading)
+
+	if err != nil {
+		context.JSON(http.StatusNotFound, gin.H{"error": "Not found", "details": err})
+		return
+	}
+
+	context.JSON(http.StatusOK, meterReading)
 }
 
 func (c MeterReadingController) Create(context *gin.Context) {
 	var meterReading *model.MeterReading
 
 	if err := context.ShouldBindJSON(&meterReading); err != nil {
-		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		context.JSON(http.StatusBadRequest, gin.H{"error": "Invalid format", "details": err})
 		return
 	}
 
 	err := c.App.Db.Insert(meterReading)
 	if err != nil {
 		log.WithError(err).Error("Unable to save MeterReading")
-		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error", "details": err})
 		return
 	}
 
