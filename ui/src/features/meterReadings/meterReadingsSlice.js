@@ -18,7 +18,11 @@ export const meterReadingsSlice = createSlice({
         getAllFinished: (state, action) => {
             state.loading = false;
             state.ids = action.payload.map(meterReading => meterReading.id);
-            state.entities = action.payload;
+            const entities = {};
+            action.payload.forEach(meterReading => {
+                entities[meterReading.id] = meterReading
+            });
+            state.entities = entities;
         },
         getAllError: (state, action) => {
             state.loading = false;
@@ -43,5 +47,6 @@ export const getAll = () => async dispatch => {
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 export const selectMeterReadings = state => Object.values(state.meterReadings.entities);
+export const selectMeterReadingsLoading = state => state.meterReadings.loading;
 
 export default meterReadingsSlice.reducer;
