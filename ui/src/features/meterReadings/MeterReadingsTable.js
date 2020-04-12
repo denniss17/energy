@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import TableContainer from "@material-ui/core/TableContainer";
-import {getAll, selectMeterReadings, selectMeterReadingsLoading} from "./meterReadingsSlice";
-import Paper from "@material-ui/core/Paper";
+import {selectMeterReadings, selectMeterReadingsLoading} from "./meterReadingsSlice";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -12,12 +11,9 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {makeStyles} from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
+import CardTitle from "../../components/CardTitle";
 
 const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        justifyContent: "center",
-    },
     table: {
         minWidth: 650,
     },
@@ -32,17 +28,16 @@ export default function MeterReadingsTable() {
     const isLoading = useSelector(selectMeterReadingsLoading);
     const meterReadings = useSelector(selectMeterReadings);
 
-    // After first render, apply an effect to load the data
-    // It has no dependencies, so it only runs on first render
-    useEffect(() => {
-        dispatch(getAll());
-    }, []);
+    const openNewMeterReadingForm = () => {
+
+    }
 
     return (
-        <div className={classes.root}>
+        <div>
+            <CardTitle>Meterstanden</CardTitle>
             {isLoading && <CircularProgress className={classes.progress}/>}
-            {!isLoading && <TableContainer component={Paper}>
-                <Table className={classes.table} aria-label="Meter readings">
+            {!isLoading && <TableContainer>
+                <Table size="small" className={classes.table} aria-label="Meter readings">
                     <TableHead>
                         <TableRow>
                             <TableCell>Datum</TableCell>

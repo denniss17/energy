@@ -17,12 +17,8 @@ export const meterReadingsSlice = createSlice({
         },
         getAllFinished: (state, action) => {
             state.loading = false;
-            state.ids = action.payload.map(meterReading => meterReading.id);
-            const entities = {};
-            action.payload.forEach(meterReading => {
-                entities[meterReading.id] = meterReading
-            });
-            state.entities = entities;
+            state.ids = Object.keys(action.payload);
+            state.entities = action.payload;
         },
         getAllError: (state, action) => {
             state.loading = false;
