@@ -11,7 +11,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import {makeStyles} from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import moment from "moment";
-import CardTitle from "../../components/CardTitle";
 
 const useStyles = makeStyles({
     table: {
@@ -24,17 +23,11 @@ const useStyles = makeStyles({
 
 export default function MeterReadingsTable() {
     const classes = useStyles();
-    const dispatch = useDispatch();
     const isLoading = useSelector(selectMeterReadingsLoading);
     const meterReadings = useSelector(selectMeterReadings);
 
-    const openNewMeterReadingForm = () => {
-
-    }
-
     return (
         <div>
-            <CardTitle>Meterstanden</CardTitle>
             {isLoading && <CircularProgress className={classes.progress}/>}
             {!isLoading && <TableContainer>
                 <Table size="small" className={classes.table} aria-label="Meter readings">

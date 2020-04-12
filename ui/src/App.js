@@ -13,11 +13,11 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import {useDispatch, useSelector} from "react-redux";
 import Fab from "@material-ui/core/Fab";
-import MeterReadingForm from "./features/meterReadings/MeterReadingForm";
 import Paper from "@material-ui/core/Paper";
 import clsx from "clsx";
-import {getAll} from "./features/meterReadings/meterReadingsSlice";
+import {getAllMeterReadings} from "./features/meterReadings/meterReadingsSlice";
 import MeterReadingDialog from "./features/meterReadings/MeterReadingDialog";
+import CardTitle from "./common/CardTitle";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
 
-    // Main components
+    // Main common
     container: {
         paddingTop: theme.spacing(4),
         paddingBottom: theme.spacing(4),
@@ -56,16 +56,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-    // React
+    // State
     const dispatch = useDispatch();
+    const state = useSelector(state => state);
+    const [meterReadingDialogOpen, setMeterReadingDialogOpen] = React.useState(false);
 
     // Styling
     const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-    // State
-    const state = useSelector(state => state);
-    const [meterReadingDialogOpen, setMeterReadingDialogOpen] = React.useState(false);
 
     // Methods
     const logState = () => {
@@ -83,7 +81,7 @@ function App() {
     // After first render, apply an effect to load the data
     // It has no dependencies, so it only runs on first render
     useEffect(() => {
-        dispatch(getAll());
+        dispatch(getAllMeterReadings());
     }, []);
 
     return (
@@ -108,23 +106,23 @@ function App() {
             <Grid container spacing={3} className={classes.container}>
                 <Grid item xs={12} md={8} lg={9}>
                     <Paper className={fixedHeightPaper}>
-                        Chart
+                        <CardTitle>Chart</CardTitle>
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={4} lg={3}>
                     <Paper className={fixedHeightPaper}>
-                        Ding
+                        <CardTitle>Ding</CardTitle>
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
                     <Paper className={classes.paper}>
+                        <CardTitle>Meterstanden</CardTitle>
                         <MeterReadingsTable/>
-
                         <MeterReadingDialog open={meterReadingDialogOpen} onClose={closeMeterReadingForm}/>
                     </Paper>
                 </Grid>
             </Grid>
-            <Fab color="primary" className={classes.fab} onClick={openNewMeterReadingForm}><AddIcon /></Fab>
+            <Fab color="primary" className={classes.fab} onClick={openNewMeterReadingForm}><AddIcon/></Fab>
         </div>
     );
 }

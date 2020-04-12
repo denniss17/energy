@@ -1,43 +1,99 @@
-import React from 'react';
-import {useDispatch} from 'react-redux';
+import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
-import moment from "moment";
 import Grid from "@material-ui/core/Grid";
+import {createMeterReading, selectMeterReadingsError, selectMeterReadingsSubmitting} from "./meterReadingsSlice";
+import {useDispatch, useSelector} from "react-redux";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({}));
 
-export default function MeterReadingForm() {
-    const classes = useStyles();
+export default function MeterReadingForm(props) {
+    // State
     const dispatch = useDispatch();
+    const meterReadingId = props.meterReadingId;
+    const isSubmitting = useSelector(selectMeterReadingsSubmitting);
+    const error = useSelector(selectMeterReadingsError);
+    let [meterReading] = useState({
+        date: moment().format('YYYY-MM-DD')
+    });
+
+    // Style
+    const classes = useStyles();
+
+    // Methods
+    const onSubmit = (event) => {
+        event.preventDefault();
+
+        const form = event.target;
+
+        meterReading = {
+            ...meterReading,
+            date: form.elements.date.value,
+            energyHigh: parseInt(form.elements.energyHigh.value),
+            energyLow: parseInt(form.elements.energyLow.value),
+            gas: parseInt(form.elements.gas.value),
+            water: parseFloat(form.elements.water.value),
+        }
+
+        if (meterReading.id) {
+            // TODO update existing
+        } else {
+            dispatch(createMeterReading(meterReading)).then(console.log(isSubmitting, error));
+        }
+    }
 
     return (
-        <form className={classes.root}>
+        <form id="meter-reading-form" className={classes.root} onSubmit={onSubmit}>
+            <div>{JSON.stringify(error)}</div>
             <Grid container spacing={2}>
                 <Grid item xs={12}>
                     <TextField disabled fullWidth id="id" className={classes.textField} label="Id"/>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField required fullWidth id="date" label="Datum" type="date"
-                               defaultValue={moment().format("YYYY-MM-DD")} className={classes.textField}
-                               InputLabelProps={{shrink: true}}/>
+                    <TextField
+                        type="date"
+                        name="date"
+                        value={meterReading.date}
+                        required
+                        fullWidth
+                        label="Datum"
+                        InputLabelProps={{shrink: true}}/>
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField required fullWidth id="energyHigh" type="number" className={classes.textField}
-                               label="Stroom normaal"/>
+                    <TextField
+                        name="energyHigh"
+                        type="number"
+                        value={meterReading.energyHigh}
+                        required
+                        fullWidth
+                        label="Stroom normaal"/>
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField required fullWidth id="energeyLow" type="number" className={classes.textField}
-                               label="Stroom dal"/>
+                    <TextField
+                        name="energyLow"
+                        type="number"
+                        value={meterReading.energyLow}
+                        required
+                        fullWidth
+                        label="Stroom dal"/>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField required fullWidth id="gas" type="number"
-                               className={classes.textField}
-                               label="Gas"/>
+                    <TextField
+                        name="gas"
+                        type="number"
+                        value={meterReading.gas}
+                        required
+                        fullWidth
+                        label="Gas"/>
                 </Grid>
                 <Grid item xs={12}>
-                    <TextField required fullWidth id="water" className={classes.textField}
-                               label="Water"/>
+                    <TextField
+                        name="water"
+                        value={meterReading.water}
+                        required
+                        fullWidth
+                        label="Water"/>
                 </Grid>
             </Grid>
         </form>
