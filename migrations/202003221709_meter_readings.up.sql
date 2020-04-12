@@ -1,12 +1,12 @@
 -- auto-generated definition
 create table meter_readings
 (
-    id          bigserial not null
+    id          uuid                     not null
         constraint meter_readings_pkey
             primary key,
-    timestamp   timestamp with time zone,
-    energy_high bigint,
-    energy_low  bigint,
-    gas         bigint,
-    water       double precision
+    timestamp   timestamp with time zone not null,
+    energy_high bigint                   not null,
+    energy_low  bigint                   not null,
+    gas         bigint                   not null,
+    water       double precision         not null
 );
