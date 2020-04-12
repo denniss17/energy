@@ -1,8 +1,10 @@
 import {createSlice} from '@reduxjs/toolkit';
+import api from '../../api/api';
 
 export const meterReadingsSlice = createSlice({
     name: 'meterReadings',
     initialState: {
+        loading: false,
         // Normalized State, using an array of ids and a dictionary of entities
         // See https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape
         // See https://redux-toolkit.js.org/usage/usage-guide#managing-normalized-data
@@ -11,17 +13,20 @@ export const meterReadingsSlice = createSlice({
     },
     reducers: {
         getAllStarted: (state, action) => {
+            state.loading = true;
         },
         getAllFinished: (state, action) => {
+            state.loading = false;
+            state.ids = action.payload.map(meterReading => meterReading.id);
+            state.entities = action.payload;
         },
         getAllError: (state, action) => {
+            state.loading = false;
         }
     },
 });
 
 export const {getAllStarted, getAllFinished, getAllError} = meterReadingsSlice.actions;
-
-console.log(meterReadingsSlice);
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
@@ -29,10 +34,9 @@ console.log(meterReadingsSlice);
 // code can then be executed and other actions can be dispatched
 export const getAll = () => async dispatch => {
     dispatch(meterReadingsSlice.actions.getAllStarted());
-    const response = fetch("/api/meter-readings");
-    // const data = response.json()
-    // dispatch(meterReadingsSlice.actions.getAllFinished(data));
-    // return data;
+    api.getAll('meter-readings')
+        .then(data => dispatch(meterReadingsSlice.actions.getAllFinished(data)))
+        .catch(error => dispatch(meterReadingsSlice.actions.getAllError(error)));
 };
 
 // The function below is called a selector and allows us to select a value from

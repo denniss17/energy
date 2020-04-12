@@ -27,7 +27,7 @@ export default function MeterReadingsTable() {
 
     return (
         <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
+            <Table className={classes.table} size="small" aria-label="Meter readingds">
                 <TableHead>
                     <TableRow>
                         <TableCell>Datum</TableCell>
@@ -39,14 +39,14 @@ export default function MeterReadingsTable() {
                 </TableHead>
                 <TableBody>
                     {meterReadings.map((meterReading) => (
-                        <TableRow key={meterReading.name}>
+                        <TableRow key={meterReading.id}>
                             <TableCell component="th" scope="row">
-                                {meterReading.name}
+                                {meterReading.timestamp}
                             </TableCell>
-                            <TableCell align="right">{meterReading.calories}</TableCell>
-                            <TableCell align="right">{meterReading.fat}</TableCell>
-                            <TableCell align="right">{meterReading.carbs}</TableCell>
-                            <TableCell align="right">{meterReading.protein}</TableCell>
+                            <TableCell align="right">{meterReading.energyHigh}</TableCell>
+                            <TableCell align="right">{meterReading.energyLow}</TableCell>
+                            <TableCell align="right">{meterReading.gas}</TableCell>
+                            <TableCell align="right">{meterReading.water}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>
