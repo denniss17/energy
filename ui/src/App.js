@@ -18,7 +18,9 @@ import clsx from "clsx";
 import {
     closeMeterReadingDialog,
     getAllMeterReadings,
-    openMeterReadingDialog, selectMeterReadingDialogOpen
+    openMeterReadingDialog,
+    selectMeterReadingDialogMeterReadingId,
+    selectMeterReadingDialogOpen
 } from "./features/meterReadings/meterReadingsSlice";
 import MeterReadingDialog from "./features/meterReadings/MeterReadingDialog";
 import CardTitle from "./common/CardTitle";
@@ -64,6 +66,7 @@ function App() {
     const dispatch = useDispatch();
     const state = useSelector(state => state);
     const meterReadingDialogOpen = useSelector(selectMeterReadingDialogOpen);
+    const meterReadingDialogMeterReadingId = useSelector(selectMeterReadingDialogMeterReadingId);
 
     // Styling
     const classes = useStyles();
@@ -98,7 +101,7 @@ function App() {
                     </IconButton>
 
                     <Typography variant="h6" className={classes.menuTitle}>
-                        Energy {meterReadingDialogOpen ? 'open' : 'closed'}
+                        Energiedashboard
                     </Typography>
 
                     <Button color="inherit" aria-label="debug" onClick={logState}>
@@ -122,7 +125,8 @@ function App() {
                     <Paper className={classes.paper}>
                         <CardTitle>Meterstanden</CardTitle>
                         <MeterReadingsTable/>
-                        <MeterReadingDialog open={meterReadingDialogOpen} onClose={closeMeterReadingForm}/>
+                        <MeterReadingDialog meterReadingId={meterReadingDialogMeterReadingId}
+                                            open={meterReadingDialogOpen} onClose={closeMeterReadingForm}/>
                     </Paper>
                 </Grid>
             </Grid>

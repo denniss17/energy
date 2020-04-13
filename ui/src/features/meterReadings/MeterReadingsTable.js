@@ -1,7 +1,12 @@
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import TableContainer from "@material-ui/core/TableContainer";
-import {selectMeterReadings, selectMeterReadingsLoading} from "./meterReadingsSlice";
+import {
+    openMeterReadingDialog,
+    selectMeterReadings,
+    selectMeterReadingsError,
+    selectMeterReadingsLoading
+} from "./meterReadingsSlice";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
@@ -10,7 +15,12 @@ import TableCell from "@material-ui/core/TableCell";
 import Tooltip from '@material-ui/core/Tooltip';
 import {makeStyles} from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import moment from "moment";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import IconButton from "@material-ui/core/IconButton";
+import Alert from "@material-ui/lab/Alert";
 
 const useStyles = makeStyles({
     table: {
@@ -22,13 +32,37 @@ const useStyles = makeStyles({
 });
 
 export default function MeterReadingsTable() {
+    // Style
     const classes = useStyles();
+
+    // State
+    const dispatch = useDispatch();
     const isLoading = useSelector(selectMeterReadingsLoading);
+    const error = useSelector(selectMeterReadingsError);
     const meterReadings = useSelector(selectMeterReadings);
+    const [meterReadingMenuAnchorElement, setMeterReadingMenuAnchorElement] = React.useState(null);
+
+    // Methods
+    const openMeterReadingMenu = (event) => {
+        setMeterReadingMenuAnchorElement(event.currentTarget);
+    };
+
+    const closeMeterReadingMenu = () => {
+        setMeterReadingMenuAnchorElement(null);
+    };
+
+    const editMeterReading = (meterReadingId) => (event) => {
+        dispatch(openMeterReadingDialog(meterReadingId));
+    };
+
+    const deleteMeterReading = (meterReadingId) => (event) => {
+
+    };
 
     return (
         <div>
             {isLoading && <CircularProgress className={classes.progress}/>}
+            {error && <Alert severity="error">{JSON.stringify(error)}</Alert>}
             {!isLoading && <TableContainer>
                 <Table size="small" className={classes.table} aria-label="Meter readings">
                     <TableHead>
@@ -38,6 +72,7 @@ export default function MeterReadingsTable() {
                             <TableCell align="right">Stroom dal</TableCell>
                             <TableCell align="right">Gas</TableCell>
                             <TableCell align="right">Water</TableCell>
+                            <TableCell/>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -52,6 +87,21 @@ export default function MeterReadingsTable() {
                                 <TableCell align="right">{meterReading.energyLow}</TableCell>
                                 <TableCell align="right">{meterReading.gas}</TableCell>
                                 <TableCell align="right">{meterReading.water}</TableCell>
+                                <TableCell align="right" padding="none">
+                                    <IconButton
+                                        aria-label="more"
+                                        aria-controls="meter-reading-menu"
+                                        aria-haspopup="true"
+                                        size="small"
+                                        onClick={openMeterReadingMenu}>
+                                        <MoreVertIcon/>
+                                    </IconButton>
+                                    <Menu id="meter-reading-menu" anchorEl={meterReadingMenuAnchorElement} keepMounted
+                                          open={Boolean(meterReadingMenuAnchorElement)}
+                                          onClose={closeMeterReadingMenu}>
+                                        <MenuItem onClick={editMeterReading(meterReading.id)}>Edit</MenuItem>
+                                        <MenuItem onClick={deleteMeterReading(meterReading.id)}>Delete</MenuItem>
+                                    </Menu></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

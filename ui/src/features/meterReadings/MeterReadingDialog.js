@@ -15,7 +15,7 @@ export default function MeterReadingDialog(props) {
         <Dialog open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Meterstand toevoegen</DialogTitle>
             <DialogContent>
-                <MeterReadingForm meterReadingId={null} onFinish={props.onClose}/>
+                <MeterReadingForm meterReadingId={props.meterReadingId} onFinish={props.onClose}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>

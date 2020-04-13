@@ -9,6 +9,7 @@ export const meterReadingsSlice = createSlice({
         error: null,
 
         dialogOpen: false,
+        dialogMeterReadingId: null,
 
         // Normalized State, using an array of ids and a dictionary of entities
         // See https://redux.js.org/recipes/structuring-reducers/normalizing-state-shape
@@ -31,7 +32,11 @@ export const meterReadingsSlice = createSlice({
         getAllError: (state, action) => {
             console.log(action);
             state.loading = false;
-            state.error = action.payload;
+            state.error = {
+                message: action.payload.message,
+                // If this is an error from the server, add server response as details
+                details: 'payload' in action.payload ? action.payload.payload : null
+            }
         },
         createStarted: (state, action) => {
             console.log(action);
@@ -54,10 +59,13 @@ export const meterReadingsSlice = createSlice({
 
         openMeterReadingDialog: (state, action) => {
             console.log(action);
+            state.error = null;
+            state.dialogMeterReadingId = action.payload;
             state.dialogOpen = true;
         },
         closeMeterReadingDialog: (state, action) => {
             console.log(action);
+            state.error = null;
             state.dialogOpen = false;
         }
     },
@@ -73,7 +81,7 @@ export const getAllMeterReadings = () => async dispatch => {
     dispatch(meterReadingsSlice.actions.getAllStarted());
     return api.getAll('meter-readings')
         .then(data => dispatch(meterReadingsSlice.actions.getAllFinished(data)))
-        .catch(error => dispatch(meterReadingsSlice.actions.getAllError(error.payload)));
+        .catch(error => dispatch(meterReadingsSlice.actions.getAllError(error)));
 };
 
 export const createMeterReading = (meterReading) => async dispatch => {
@@ -89,9 +97,11 @@ export const createMeterReading = (meterReading) => async dispatch => {
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 export const selectMeterReadings = state => Object.values(state.meterReadings.entities);
+export const selectMeterReading = id => state => state.meterReadings.entities[id];
 export const selectMeterReadingsLoading = state => state.meterReadings.loading;
 export const selectMeterReadingsSubmitting = state => state.meterReadings.submitting;
 export const selectMeterReadingsError = state => state.meterReadings.error;
 export const selectMeterReadingDialogOpen = state => state.meterReadings.dialogOpen;
+export const selectMeterReadingDialogMeterReadingId = state => state.meterReadings.dialogMeterReadingId;
 
 export default meterReadingsSlice.reducer;

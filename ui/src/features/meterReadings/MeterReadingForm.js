@@ -2,7 +2,13 @@ import React, {useState} from 'react';
 import {makeStyles} from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
-import {createMeterReading, selectMeterReadingsError, selectMeterReadingsSubmitting} from "./meterReadingsSlice";
+import Alert from "@material-ui/lab/Alert";
+import {
+    createMeterReading,
+    selectMeterReading,
+    selectMeterReadingsError,
+    selectMeterReadingsSubmitting
+} from "./meterReadingsSlice";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 
@@ -11,12 +17,13 @@ const useStyles = makeStyles((theme) => ({}));
 export default function MeterReadingForm(props) {
     // State
     const dispatch = useDispatch();
-    const meterReadingId = props.meterReadingId;
     const isSubmitting = useSelector(selectMeterReadingsSubmitting);
     const error = useSelector(selectMeterReadingsError);
-    let [meterReading] = useState({
-        date: moment().format('YYYY-MM-DD')
-    });
+    const [meterReading, setMeterReading] = useState(
+        useSelector(selectMeterReading(props.meterReadingId)) ||
+        {
+            date: moment().format('YYYY-MM-DD')
+        });
 
     // Style
     const classes = useStyles();
@@ -27,14 +34,14 @@ export default function MeterReadingForm(props) {
 
         const form = event.target;
 
-        meterReading = {
+        setMeterReading({
             ...meterReading,
             date: form.elements.date.value,
             energyHigh: parseInt(form.elements.energyHigh.value),
             energyLow: parseInt(form.elements.energyLow.value),
             gas: parseInt(form.elements.gas.value),
             water: parseFloat(form.elements.water.value),
-        }
+        })
 
         if (meterReading.id) {
             // TODO update existing
@@ -45,10 +52,10 @@ export default function MeterReadingForm(props) {
 
     return (
         <form id="meter-reading-form" className={classes.root} onSubmit={onSubmit}>
-            <div>{JSON.stringify(error)}</div>
+            {error && <Alert severity="error">{JSON.stringify(error)}</Alert>}
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <TextField disabled fullWidth id="id" className={classes.textField} label="Id"/>
+                    <TextField disabled fullWidth id="id" value={meterReading.id} className={classes.textField} label="Id"/>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
