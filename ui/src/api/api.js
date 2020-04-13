@@ -24,8 +24,7 @@ export const create = async (resourceName, entity) => {
         throw error;
     }
 
-    return payload.data;
-
+    return payload != null && 'data' in payload ? payload.data : null;
 }
 
 export default {getAll, create};

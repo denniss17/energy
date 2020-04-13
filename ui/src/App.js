@@ -15,7 +15,11 @@ import {useDispatch, useSelector} from "react-redux";
 import Fab from "@material-ui/core/Fab";
 import Paper from "@material-ui/core/Paper";
 import clsx from "clsx";
-import {getAllMeterReadings} from "./features/meterReadings/meterReadingsSlice";
+import {
+    closeMeterReadingDialog,
+    getAllMeterReadings,
+    openMeterReadingDialog, selectMeterReadingDialogOpen
+} from "./features/meterReadings/meterReadingsSlice";
 import MeterReadingDialog from "./features/meterReadings/MeterReadingDialog";
 import CardTitle from "./common/CardTitle";
 
@@ -59,7 +63,7 @@ function App() {
     // State
     const dispatch = useDispatch();
     const state = useSelector(state => state);
-    const [meterReadingDialogOpen, setMeterReadingDialogOpen] = React.useState(false);
+    const meterReadingDialogOpen = useSelector(selectMeterReadingDialogOpen);
 
     // Styling
     const classes = useStyles();
@@ -71,11 +75,11 @@ function App() {
     };
 
     const openNewMeterReadingForm = () => {
-        setMeterReadingDialogOpen(true);
+        dispatch(openMeterReadingDialog());
     };
 
     const closeMeterReadingForm = () => {
-        setMeterReadingDialogOpen(false);
+        dispatch(closeMeterReadingDialog());
     };
 
     // After first render, apply an effect to load the data
@@ -94,7 +98,7 @@ function App() {
                     </IconButton>
 
                     <Typography variant="h6" className={classes.menuTitle}>
-                        Energy
+                        Energy {meterReadingDialogOpen ? 'open' : 'closed'}
                     </Typography>
 
                     <Button color="inherit" aria-label="debug" onClick={logState}>
