@@ -79,6 +79,7 @@ export default function MeterReadingsTable() {
                         {meterReadings.map((meterReading) => (
                             <TableRow key={meterReading.id}>
                                 <TableCell component="th" scope="row">
+                                    {meterReading.id}
                                     <Tooltip title={meterReading.timestamp}>
                                         <span>{moment(meterReading.timestamp).format("YYYY-MM-DD")}</span>
                                     </Tooltip>
@@ -90,16 +91,16 @@ export default function MeterReadingsTable() {
                                 <TableCell align="right" padding="none">
                                     <IconButton
                                         aria-label="more"
-                                        aria-controls="meter-reading-menu"
+                                        aria-controls={'meter-reading-menu-' + meterReading.id}
                                         aria-haspopup="true"
                                         size="small"
                                         onClick={openMeterReadingMenu}>
                                         <MoreVertIcon/>
                                     </IconButton>
-                                    <Menu id="meter-reading-menu" anchorEl={meterReadingMenuAnchorElement} keepMounted
+                                    <Menu id={'meter-reading-menu-' + meterReading.id} anchorEl={meterReadingMenuAnchorElement} keepMounted
                                           open={Boolean(meterReadingMenuAnchorElement)}
                                           onClose={closeMeterReadingMenu}>
-                                        <MenuItem onClick={editMeterReading(meterReading.id)}>Edit</MenuItem>
+                                        <MenuItem onClick={editMeterReading(meterReading.id.slice(0))}>Edit {meterReading.id.slice(0)}</MenuItem>
                                         <MenuItem onClick={deleteMeterReading(meterReading.id)}>Delete</MenuItem>
                                     </Menu></TableCell>
                             </TableRow>

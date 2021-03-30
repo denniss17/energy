@@ -89,7 +89,7 @@ function App() {
     // It has no dependencies, so it only runs on first render
     useEffect(() => {
         dispatch(getAllMeterReadings());
-    }, []);
+    }, [dispatch]);
 
     return (
         <div className={classes.root}>

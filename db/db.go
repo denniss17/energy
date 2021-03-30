@@ -1,4 +1,4 @@
-package config
+package db
 
 import (
 	"github.com/go-pg/pg/v9"
@@ -8,12 +8,11 @@ func InitDb() (*pg.DB, error) {
 	var err error
 
 	db := pg.Connect(&pg.Options{
+		Addr:     "localhost:5434",
 		User:     "energy",
 		Database: "energy",
 		Password: "energy",
 	})
-
-	//err = db.CreateTable((*model.MeterReading)(nil), &orm.CreateTableOptions{})
 
 	return db, err
 }

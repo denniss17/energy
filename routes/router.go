@@ -1,7 +1,7 @@
-package config
+package routes
 
 import (
-	"energy/controller"
+	"energy/controllers"
 	"energy/core"
 	"github.com/gin-gonic/gin"
 )
@@ -11,11 +11,12 @@ func InitRouter(app *core.Application) (*gin.Engine, error) {
 	router := gin.Default()
 
 	// Create controllers
-	meterReadingController := controller.MeterReadingController{App: app}
+	meterReadingController := controllers.MeterReadingController{App: app}
 
 	// Create routes
 	router.GET("/api/meter-readings", meterReadingController.Index)
 	router.POST("/api/meter-readings", meterReadingController.Create)
+	router.PUT("/api/meter-readings/:id", meterReadingController.Update)
 
 	return router, nil
 }

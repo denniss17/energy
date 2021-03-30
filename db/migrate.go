@@ -1,4 +1,4 @@
-package config
+package db
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ func MigrateDb(db *pg.DB) error {
 		db.Options().Addr,
 		db.Options().Database)
 
-	migrator, err := migrate.New("file://migrations", databaseUrl)
+	migrator, err := migrate.New("file://db/migrations", databaseUrl)
 	if err != nil {
 		return err
 	}

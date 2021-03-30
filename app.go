@@ -1,8 +1,9 @@
 package main
 
 import (
-	"energy/config"
 	"energy/core"
+	"energy/db"
+	"energy/routes"
 	"log"
 )
 
@@ -13,25 +14,21 @@ func main() {
 	defer app.Close()
 
 	log.Print("Initializing database")
-	app.Db, err = config.InitDb()
-	if err != nil {
+	if app.Db, err = db.InitDb(); err != nil {
 		panic(err)
 	}
 
 	log.Print("Migrating database")
-	err = config.MigrateDb(app.Db)
-	if err != nil {
+	if err = db.MigrateDb(app.Db); err != nil {
 		panic(err)
 	}
 
 	log.Print("Initializing router")
-	app.Router, err = config.InitRouter(app)
-	if err != nil {
+	if app.Router, err = routes.InitRouter(app); err != nil {
 		panic(err)
 	}
 
-	err = app.Run()
-	if err != nil {
+	if err = app.Run(); err != nil {
 		panic(err)
 	}
 }
