@@ -11,9 +11,13 @@ func InitRouter(applicationContext *container.ApplicationContext) (*gin.Engine, 
 	router := gin.Default()
 
 	// Create controllers
+	meterController := controllers.MeterController{Context: applicationContext}
 	meterReadingController := controllers.MeterReadingController{Context: applicationContext}
 
 	// Create routes
+	router.GET("/api/meters", meterController.Index)
+	router.POST("/api/meters", meterController.Create)
+
 	router.GET("/api/meter-readings", meterReadingController.Index)
 	router.POST("/api/meter-readings", meterReadingController.Create)
 	router.PUT("/api/meter-readings/:id", meterReadingController.Update)

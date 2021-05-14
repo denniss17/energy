@@ -1,0 +1,11 @@
+POST http://localhost:8080/api/meters
+Content-Type: application/json
+
+{
+  "name": "gas",
+  "type": "gas"
+}
+
+###
+GET http://localhost:8080/api/meters
+Accept: application/json
