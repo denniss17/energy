@@ -1,17 +1,17 @@
 package routes
 
 import (
+	"energy/container"
 	"energy/controllers"
-	"energy/core"
 	"github.com/gin-gonic/gin"
 )
 
-func InitRouter(app *core.Application) (*gin.Engine, error) {
+func InitRouter(applicationContext *container.ApplicationContext) (*gin.Engine, error) {
 	// Create server with default middleware
 	router := gin.Default()
 
 	// Create controllers
-	meterReadingController := controllers.MeterReadingController{App: app}
+	meterReadingController := controllers.MeterReadingController{Context: applicationContext}
 
 	// Create routes
 	router.GET("/api/meter-readings", meterReadingController.Index)

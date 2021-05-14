@@ -1,30 +1,19 @@
 package main
 
-import (
-	"energy/core"
-	"energy/db"
-	"energy/routes"
-	"log"
-)
+import "energy/core"
 
 func main() {
 	var err error
 
 	app := &core.Application{}
-	defer app.Close()
 
-	log.Print("Initializing database")
-	if app.Db, err = db.InitDb(); err != nil {
-		panic(err)
-	}
+	defer func(app *core.Application) {
+		if err := app.Close(); err != nil {
+			panic(err)
+		}
+	}(app)
 
-	log.Print("Migrating database")
-	if err = db.MigrateDb(app.Db); err != nil {
-		panic(err)
-	}
-
-	log.Print("Initializing router")
-	if app.Router, err = routes.InitRouter(app); err != nil {
+	if err = app.Init(); err != nil {
 		panic(err)
 	}
 
