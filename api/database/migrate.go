@@ -1,7 +1,7 @@
 package database
 
 import (
-	"energy/models"
+	"github.com/denniss17/energy/api/models"
 	"gorm.io/gorm"
 )
 

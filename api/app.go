@@ -1,6 +1,6 @@
 package main
 
-import "energy/core"
+import "github.com/denniss17/energy/api/core"
 
 func main() {
 	var err error

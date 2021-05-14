@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"energy/container"
-	"energy/controllers"
+	"github.com/denniss17/energy/api/container"
+	"github.com/denniss17/energy/api/controllers"
 	"github.com/gin-gonic/gin"
 )
 

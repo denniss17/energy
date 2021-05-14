@@ -1,7 +1,7 @@
 package controllers
 
 import (
-	"energy/container"
+	"github.com/denniss17/energy/api/container"
 	"github.com/gin-gonic/gin"
 )
 

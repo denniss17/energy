@@ -1,10 +1,10 @@
 package core
 
 import (
-	"energy/container"
-	"energy/database"
-	"energy/routes"
 	"fmt"
+	"github.com/denniss17/energy/api/container"
+	"github.com/denniss17/energy/api/database"
+	"github.com/denniss17/energy/api/routes"
 	"log"
 )
 
