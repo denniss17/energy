@@ -9,3 +9,7 @@ Content-Type: application/json
 ###
 GET http://localhost:8080/api/meters
 Accept: application/json
+
+###
+GET http://localhost:8080/api/meter-readings
+Accept: application/json

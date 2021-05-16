@@ -2,29 +2,33 @@ package controllers
 
 import (
 	"github.com/denniss17/energy/api/container"
+	"github.com/denniss17/energy/api/models"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type MeterReadingController struct {
 	Context *container.ApplicationContext
 }
 
-func (c MeterReadingController) Index(context *gin.Context) {
-	//var meterReadings []models.MeterReading
-	//err := c.App.Db.Model(&meterReadings).Select()
-	//
-	//if err != nil {
-	//	context.Error(err)
-	//}
-	//
-	//if meterReadings == nil {
-	//	meterReadings = make([]models.MeterReading, 0)
-	//}
-	//
-	//context.JSON(200, gin.H{"data": meterReadings})
+func (controller MeterReadingController) Index(c *gin.Context) {
+	var meterReadings []models.MeterReading
+
+	result := controller.Context.Db.Preload("MeterReadingValues").Find(&meterReadings)
+
+	if err := result.Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Internal Server Error", "details": err})
+		return
+	}
+
+	if meterReadings == nil {
+		meterReadings = make([]models.MeterReading, 0)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": meterReadings})
 }
 
-func (c MeterReadingController) Get(context *gin.Context) {
+func (controller MeterReadingController) Get(context *gin.Context) {
 	//id, err := uuid.FromString(context.Param("id"))
 	//
 	//if err != nil {
@@ -43,7 +47,7 @@ func (c MeterReadingController) Get(context *gin.Context) {
 	//context.JSON(http.StatusOK, gin.H{"data": meterReading})
 }
 
-func (c MeterReadingController) Create(context *gin.Context) {
+func (controller MeterReadingController) Create(context *gin.Context) {
 	//var request *models.MeterReading
 	//
 	//if err := context.ShouldBindJSON(&request); err != nil {
@@ -61,7 +65,7 @@ func (c MeterReadingController) Create(context *gin.Context) {
 	//context.JSON(http.StatusCreated, nil)
 }
 
-func (c MeterReadingController) Update(context *gin.Context) {
+func (controller MeterReadingController) Update(context *gin.Context) {
 	//id, err := uuid.FromString(context.Param("id"))
 	//
 	//if err != nil {
