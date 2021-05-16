@@ -6,10 +6,10 @@ import Button from "@material-ui/core/Button";
 import React from "react";
 import MeterReadingForm from "./MeterReadingForm";
 import {useSelector} from "react-redux";
-import {selectMeterReadingsSubmitting} from "./meterReadingsSlice";
+import {selectIsMeterReadingsSaving} from "./meterReadingsSlice";
 
 export default function MeterReadingDialog(props) {
-    const isSubmitting = useSelector(selectMeterReadingsSubmitting);
+    const isSubmitting = useSelector(selectIsMeterReadingsSaving);
 
     return (
         <Dialog open={props.open} onClose={props.onClose} aria-labelledby="form-dialog-title">

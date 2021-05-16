@@ -20,10 +20,11 @@ import {
     getAllMeterReadings,
     openMeterReadingDialog,
     selectMeterReadingDialogMeterReadingId,
-    selectMeterReadingDialogOpen
+    selectIsMeterReadingDialogOpen
 } from "./features/meterReadings/meterReadingsSlice";
 import MeterReadingDialog from "./features/meterReadings/MeterReadingDialog";
 import CardTitle from "./common/CardTitle";
+import {getAllMeters} from "./features/meters/metersSlice";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -65,7 +66,7 @@ function App() {
     // State
     const dispatch = useDispatch();
     const state = useSelector(state => state);
-    const meterReadingDialogOpen = useSelector(selectMeterReadingDialogOpen);
+    const isMeterReadingDialogOpen = useSelector(selectIsMeterReadingDialogOpen);
     const meterReadingDialogMeterReadingId = useSelector(selectMeterReadingDialogMeterReadingId);
 
     // Styling
@@ -88,6 +89,7 @@ function App() {
     // After first render, apply an effect to load the data
     // It has no dependencies, so it only runs on first render
     useEffect(() => {
+        dispatch(getAllMeters());
         dispatch(getAllMeterReadings());
     }, [dispatch]);
 
@@ -101,7 +103,7 @@ function App() {
                     </IconButton>
 
                     <Typography variant="h6" className={classes.menuTitle}>
-                        Energiedashboard
+                        ⚡ Energiedashboard
                     </Typography>
 
                     <Button color="inherit" aria-label="debug" onClick={logState}>
@@ -126,7 +128,7 @@ function App() {
                         <CardTitle>Meterstanden</CardTitle>
                         <MeterReadingsTable/>
                         <MeterReadingDialog meterReadingId={meterReadingDialogMeterReadingId}
-                                            open={meterReadingDialogOpen} onClose={closeMeterReadingForm}/>
+                                            open={isMeterReadingDialogOpen} onClose={closeMeterReadingForm}/>
                     </Paper>
                 </Grid>
             </Grid>

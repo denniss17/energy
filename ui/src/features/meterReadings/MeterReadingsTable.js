@@ -5,7 +5,7 @@ import {
     openMeterReadingDialog,
     selectMeterReadings,
     selectMeterReadingsError,
-    selectMeterReadingsLoading
+    selectIsMeterReadingsLoading
 } from "./meterReadingsSlice";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -21,6 +21,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import Alert from "@material-ui/lab/Alert";
+import {selectMeters, selectIsMetersError, selectIsMetersLoading} from "../meters/metersSlice";
 
 const useStyles = makeStyles({
     table: {
@@ -37,8 +38,9 @@ export default function MeterReadingsTable() {
 
     // State
     const dispatch = useDispatch();
-    const isLoading = useSelector(selectMeterReadingsLoading);
-    const error = useSelector(selectMeterReadingsError);
+    const isLoading = useSelector(state => selectIsMetersLoading(state) || selectIsMeterReadingsLoading(state));
+    const error = useSelector(state => selectIsMetersError(state) || selectMeterReadingsError(state));
+    const meters = useSelector(selectMeters);
     const meterReadings = useSelector(selectMeterReadings);
     const [meterReadingMenuAnchorElement, setMeterReadingMenuAnchorElement] = React.useState(null);
 
@@ -68,11 +70,7 @@ export default function MeterReadingsTable() {
                     <TableHead>
                         <TableRow>
                             <TableCell>Datum</TableCell>
-                            <TableCell align="right">Stroom normaal</TableCell>
-                            <TableCell align="right">Stroom dal</TableCell>
-                            <TableCell align="right">Gas</TableCell>
-                            <TableCell align="right">Water</TableCell>
-                            <TableCell/>
+                            {meters.map((meter) => <TableCell key={meter.id} align="right">{meter.name}</TableCell>)}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -84,10 +82,14 @@ export default function MeterReadingsTable() {
                                         <span>{moment(meterReading.timestamp).format("YYYY-MM-DD")}</span>
                                     </Tooltip>
                                 </TableCell>
-                                <TableCell align="right">{meterReading.energyHigh}</TableCell>
-                                <TableCell align="right">{meterReading.energyLow}</TableCell>
-                                <TableCell align="right">{meterReading.gas}</TableCell>
-                                <TableCell align="right">{meterReading.water}</TableCell>
+                                {meters.map((meter) => (
+                                    //meterReading.meterReadingValues
+                                    <TableCell align="right">{meter.name}</TableCell>
+                                ))}
+                                {/*<TableCell align="right">{meterReading.energyHigh}</TableCell>*/}
+                                {/*<TableCell align="right">{meterReading.energyLow}</TableCell>*/}
+                                {/*<TableCell align="right">{meterReading.gas}</TableCell>*/}
+                                {/*<TableCell align="right">{meterReading.water}</TableCell>*/}
                                 <TableCell align="right" padding="none">
                                     <IconButton
                                         aria-label="more"

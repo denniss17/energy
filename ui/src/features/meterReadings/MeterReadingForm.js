@@ -7,7 +7,7 @@ import {
     createMeterReading,
     selectMeterReading,
     selectMeterReadingsError,
-    selectMeterReadingsSubmitting
+    selectIsMeterReadingsSaving
 } from "./meterReadingsSlice";
 import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({}));
 export default function MeterReadingForm(props) {
     // State
     const dispatch = useDispatch();
-    const isSubmitting = useSelector(selectMeterReadingsSubmitting);
+    const isSubmitting = useSelector(selectIsMeterReadingsSaving);
     const error = useSelector(selectMeterReadingsError);
     const [meterReading, setMeterReading] = useState(
         useSelector(selectMeterReading(props.meterReadingId)) ||

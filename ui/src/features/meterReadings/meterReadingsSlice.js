@@ -5,7 +5,7 @@ export const meterReadingsSlice = createSlice({
     name: 'meterReadings',
     initialState: {
         loading: false,
-        submitting: false,
+        saving: false,
         error: null,
 
         dialogOpen: false,
@@ -40,16 +40,16 @@ export const meterReadingsSlice = createSlice({
         },
         createStarted: (state, action) => {
             console.log(action);
-            state.submitting = true;
+            state.saving = true;
             state.error = null;
         },
         createFinished: (state, action) => {
             console.log(action);
-            state.submitting = false;
+            state.saving = false;
         },
         createError: (state, action) => {
             console.log(action);
-            state.submitting = false;
+            state.saving = false;
             state.error = {
                 message: action.payload.message,
                 // If this is an error from the server, add server response as details
@@ -98,10 +98,10 @@ export const createMeterReading = (meterReading) => async dispatch => {
 // in the slice file. For example: `useSelector((state) => state.counter.value)`
 export const selectMeterReadings = state => Object.values(state.meterReadings.entities);
 export const selectMeterReading = id => state => state.meterReadings.entities[id];
-export const selectMeterReadingsLoading = state => state.meterReadings.loading;
-export const selectMeterReadingsSubmitting = state => state.meterReadings.submitting;
+export const selectIsMeterReadingsLoading = state => state.meterReadings.loading;
+export const selectIsMeterReadingsSaving = state => state.meterReadings.saving;
+export const selectIsMeterReadingDialogOpen = state => state.meterReadings.dialogOpen;
 export const selectMeterReadingsError = state => state.meterReadings.error;
-export const selectMeterReadingDialogOpen = state => state.meterReadings.dialogOpen;
 export const selectMeterReadingDialogMeterReadingId = state => state.meterReadings.dialogMeterReadingId;
 
 export default meterReadingsSlice.reducer;
